@@ -1,36 +1,40 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Parte práctica del curso de Supabase Auth
 
-## Getting Started
+- URL del proyecto de Supabase + Anon Key de Supabase
+- Clientes de Supabase
 
-First, run the development server:
+## Crear cuenta con Email y Contraseña
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Crear cuenta
+- Mostrar usuario en el dashboard, su sesión y su identidad
+- Código de la página
+- Redirect urls en el dashboard
+- Mostrar código de callback
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+> **Explicación de `/api/callback/route.ts`**: Endpoint que actua como el "puente" entre Supabase Auth y tu aplicación. Este endpoint autentica al usuario cuando el usuario es redireccionado a nuestra aplicación tras haberle dado click a alguno de los links que Supabase manda al email (confirmar correo, reset password, magic links).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Login con Email y contraseña
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Iniciar sesión en otro navegador para ese mismo usuario
+- Mostrar cómo se crea otra sesión para ese usuario
 
-## Learn More
+## Login con Magic Links
 
-To learn more about Next.js, take a look at the following resources:
+## Login con OTP por SMS
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Configurar Twilio
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Login con OAuth Providers
 
-## Deploy on Vercel
+- Configurar Google
+- Configurar GitHub
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Editar Perfil
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Cambiar Contraseña
+
+## Cerrar Sesión
+
+## Borrar Cuenta
+
+## Olvidé mi contraseña

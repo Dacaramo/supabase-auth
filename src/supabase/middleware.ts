@@ -1,6 +1,20 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
+// Rutas que requieren autenticación
+const protectedRoutes = ['/dashboard', '/mfa', '/profile', '/update-password'];
+
+// Rutas públicas que redirigen al dashboard si el usuario ya está autenticado
+const publicRoutes = [
+  '/',
+  '/login',
+  '/register',
+  '/magic-link',
+  '/oauth',
+  '/otp-sms',
+  '/reset-password',
+];
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
@@ -36,6 +50,35 @@ export async function updateSession(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  const url = request.nextUrl.clone();
+  const pathname = url.pathname;
+
+  // Si es una ruta protegida y no hay usuario autenticado
+  if (protectedRoutes.includes(pathname) && !user) {
+    url.pathname = '/';
+    const response = NextResponse.redirect(url);
+
+    // Copiar headers de la respuesta de Supabase
+    supabaseResponse.headers.forEach((value, key) => {
+      response.headers.set(key, value);
+    });
+
+    return response;
+  }
+
+  // Si es una ruta pública y el usuario ya está autenticado
+  if (publicRoutes.includes(pathname) && user) {
+    url.pathname = '/dashboard';
+    const response = NextResponse.redirect(url);
+
+    // Copiar headers de la respuesta de Supabase
+    supabaseResponse.headers.forEach((value, key) => {
+      response.headers.set(key, value);
+    });
+
+    return response;
+  }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're
   // creating a new response object with NextResponse.redirect() or

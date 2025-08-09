@@ -1,20 +1,10 @@
+'use client';
+
 import Link from 'next/link';
-import { createClient } from '@/supabase/server';
-import { redirect } from 'next/navigation';
 
-export default async function HomePage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  // Si el usuario está autenticado, redirigir al dashboard
-  if (user) {
-    redirect('/dashboard');
-  }
-
+export default function HomePage() {
   return (
-    <div className='min-h-screen bg-gradient-to-br from-primary/20 to-secondary/20'>
+    <div className='min-h-screen'>
       <div className='container mx-auto px-4 py-16'>
         <div className='text-center space-y-8'>
           <div className='space-y-4'>
@@ -45,12 +35,6 @@ export default async function HomePage() {
                 • Login con Magic Links ✨
               </Link>
               <Link
-                href='/otp-email'
-                className='link link-info'
-              >
-                • Login con OTP por Email 📧
-              </Link>
-              <Link
                 href='/otp-sms'
                 className='link link-info'
               >
@@ -66,13 +50,7 @@ export default async function HomePage() {
                 href='/reset-password'
                 className='link link-info'
               >
-                • Resetear contraseña 🔃
-              </Link>
-              <Link
-                href='/mfa'
-                className='link link-info'
-              >
-                • MFA (Multi Factor Authentication) 🛡️
+                • Olvidé mi contraseña 🔃
               </Link>
             </div>
           </div>
