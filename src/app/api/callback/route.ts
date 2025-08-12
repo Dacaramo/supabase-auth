@@ -6,6 +6,10 @@ export async function GET(request: NextRequest) {
   const code = searchParams.get('code');
   const type = searchParams.get('type');
 
+  const token_hash = searchParams.get('token_hash');
+
+  const supabase = await createClient();
+
   // Si hay un parámetro 'next', lo usamos como URL de redirección
   const next = searchParams.get('next') ?? '/dashboard';
 
@@ -30,6 +34,41 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // Si hay error o no hay código, redirigir a página de error
-  return NextResponse.redirect(`${origin}/error`);
+  // Método 2: Verificación directa con token_hash (confirmación de email)
+
+  if (token_hash && type) {
+    const { error } = await supabase.auth.verifyOtp({
+      token_hash,
+
+      type: type as any,
+    });
+
+    if (!error) {
+      const forwardedHost = request.headers.get('x-forwarded-host');
+
+      const isLocalEnv = process.env.NODE_ENV === 'development';
+
+      if (isLocalEnv) {
+        return NextResponse.redirect(`${origin}${next}`);
+      } else if (forwardedHost) {
+        return NextResponse.redirect(`https://${forwardedHost}${next}`);
+      } else {
+        return NextResponse.redirect(`${origin}${next}`);
+      }
+    } else {
+      // Error en verificación - redirigir con mensaje de error
+
+      return NextResponse.redirect(
+        `${origin}/confirm-email?token_hash=${token_hash}&type=${type}&message=${encodeURIComponent(
+          error.message
+        )}`
+      );
+    }
+  }
+
+  // Si hay error o no hay código/token, redirigir a página de error
+
+  return NextResponse.redirect(
+    `${origin}/error?message=No se pudo procesar la solicitud`
+  );
 }
